@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -12,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.dision.R;
 import com.example.dision.helper.ViewModelFactory;
@@ -27,9 +31,17 @@ public class LoginFragment extends Fragment {
     private ImageButton loginButton;
     private MaterialButton registerButton;
 
+    private LoginFragment thisFragment = this;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
     @Override
@@ -37,7 +49,7 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
-        ViewModelFactory factory = new ViewModelFactory();
+        ViewModelFactory factory = new ViewModelFactory(mAuth);
         LoginViewModel viewModel = new ViewModelProvider(this, factory).get(LoginViewModel.class);
 
         emailEditText = view.findViewById(R.id.email_edittext);
@@ -90,6 +102,8 @@ public class LoginFragment extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                NavDirections direction = LoginFragmentDirections.actionLoginFragmentToRegisterFragment();
+                NavHostFragment.findNavController(thisFragment).navigate(direction);
             }
         });
     }
