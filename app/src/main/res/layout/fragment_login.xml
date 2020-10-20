@@ -7,6 +7,23 @@
     android:background="@drawable/background"
     tools:context=".screens.login.LoginFragment">
 
+    <LinearLayout
+        android:id="@+id/loading_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="#99000000"
+        android:visibility="gone"
+        android:elevation="4dp"
+        android:clickable="true"
+        android:focusable="true">
+        <ProgressBar
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:indeterminateDrawable="@drawable/ball"/>
+    </LinearLayout>
+
     <androidx.cardview.widget.CardView
         android:layout_width="320dp"
         android:layout_height="wrap_content"

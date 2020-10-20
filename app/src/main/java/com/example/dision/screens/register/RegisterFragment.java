@@ -3,7 +3,6 @@ package com.example.dision.screens.register;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -168,7 +167,7 @@ public class RegisterFragment extends Fragment {
                     case SUCCESS:
                         loadingScrim.setVisibility(View.GONE);
                         // Sign Created user out
-                        FirebaseAuth.getInstance().signOut();
+                        FirebaseAuth.getInstance().signOut();//TODO move all sign out code to viewModel
                         // Navigate back to login screen
                         NavHostFragment.findNavController(thisFragment).popBackStack();
                 }

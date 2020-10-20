@@ -1,7 +1,10 @@
 package com.example.dision
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.dision.helper.NetworkState
+import com.example.dision.models.User
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -48,5 +51,22 @@ class Repository(private val firestore: FirebaseFirestore) {
             if (task.isSuccessful) loadState.postValue(NetworkState.SUCCESS)
             else loadState.postValue(NetworkState.FAILURE)
         }
+    }
+
+    fun loadOrgList(uid: String, loadState: MutableLiveData<NetworkState>, user: MutableLiveData<User>) {
+        firestore.document("people/$uid").get()
+                .addOnSuccessListener {userData ->
+                    user.postValue(User(
+                            userData.getString("id")!!,
+                            userData.getString("name")!!,
+                            userData.getString("email")!!,
+                            userData.get("organizations") as HashMap<String, DocumentReference>
+                    ))
+                    loadState.postValue(NetworkState.SUCCESS)
+                }
+                .addOnFailureListener {
+                    Log.e("REPOSITORY_LOADORGLIST", "Couldn't load user documents")
+                    loadState.postValue(NetworkState.FAILURE)
+                }
     }
 }

@@ -5,6 +5,7 @@ import android.util.Patterns;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.example.dision.Repository;
@@ -21,6 +22,7 @@ public class RegisterViewModel extends ViewModel {
     public RegisterViewModel(FirebaseAuth auth, Repository repository){
         this.auth = auth;
         this.repository = repository;
+        loadState.observeForever(loadStateObserver);
     }
 
     private FirebaseAuth auth;
@@ -32,6 +34,14 @@ public class RegisterViewModel extends ViewModel {
 
     private MutableLiveData<NetworkState> _loadState = new MutableLiveData<>(NetworkState.IDLE);
     LiveData<NetworkState> loadState = _loadState;
+
+    Observer<NetworkState> loadStateObserver = new Observer<NetworkState>() {
+        @Override
+        public void onChanged(NetworkState networkState) {
+            if (networkState == NetworkState.FAILURE || networkState == NetworkState.SUCCESS)
+                auth.signOut();
+        }
+    };
 
     public void register() {
         if (!(name.length() > 0 && Patterns.EMAIL_ADDRESS.matcher(email).matches() && password.length() >= 8))
@@ -69,5 +79,11 @@ public class RegisterViewModel extends ViewModel {
         //Create organization with unique ID and add currently signed user
         //noinspection ConstantConditions
         repository.createUserAndOrgRecord(orgName, name, user.getEmail(), user.getUid(), _loadState);
+    }
+
+    @Override
+    protected void onCleared() {
+        loadState.removeObserver(loadStateObserver);
+        super.onCleared();
     }
 }

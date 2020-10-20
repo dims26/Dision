@@ -27,7 +27,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(LoginViewModel.class))
-            return (T) new LoginViewModel();
+            return (T) new LoginViewModel(auth, repository);
         else if (modelClass.isAssignableFrom(RegisterViewModel.class))
             return (T) new RegisterViewModel(auth, repository);
         else throw new IllegalArgumentException("Unsupported ViewModel class: " + modelClass.getName());

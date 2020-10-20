@@ -9,4 +9,5 @@
     <string name="register">Register</string>
     <string name="name_of_organization_hint">Name of Organization</string>
     <string name="full_name_hint">Full name</string>
+    <string name="select_an_organization">Select an Organization</string>
 </resources>
